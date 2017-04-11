@@ -29,6 +29,9 @@ public class GameIC extends ApplicationAdapter {
     private float posicaoMovimentoHorizontal;
     private float posicaoMovimentoHorizontal2;
     private float variacao =0;
+    private float velocidadeQueda =0;
+    private float posicaoInicialVertical;
+    private boolean pulou = false;
 
 
 
@@ -38,7 +41,7 @@ public class GameIC extends ApplicationAdapter {
         batch = new SpriteBatch();
 
         fundo = new Texture("city_night.jpg");
-        fundo2 = new Texture("city_morning.jpg");
+        fundo2 = new Texture("city_night.jpg");
         personagem = new Texture[3];
         personagem[0] = new Texture("man_stand.png");
         personagem[1]= new Texture("man_walk1.png");
@@ -46,6 +49,7 @@ public class GameIC extends ApplicationAdapter {
 
       alturaDispositivo = Gdx.graphics.getHeight();
       larguraDispositivo = Gdx.graphics.getWidth();
+       posicaoInicialVertical = 120;
 
 
 
@@ -55,27 +59,56 @@ public class GameIC extends ApplicationAdapter {
 	@Override
 	public void render () {
 
+        if(posicaoInicialVertical <= 120){
+            pulou = false;
+        }
         deltaTime = Gdx.graphics.getDeltaTime();
 
-        posicaoMovimentoHorizontal -= deltaTime * 1000;
-        posicaoMovimentoHorizontal2 -= deltaTime * 1000;
+        posicaoMovimentoHorizontal -= deltaTime * 300;
+        posicaoMovimentoHorizontal2 -= deltaTime * 300;
 
+
+            if(Gdx.input.justTouched()){
+                if(pulou != true){
+                if(posicaoInicialVertical < 400){
+                        velocidadeQueda = -20;
+
+                    }else{
+                    pulou = true;
+                }
+                }
+            }
+
+
+        else{
+            velocidadeQueda ++;
+            if(posicaoInicialVertical > 120 || velocidadeQueda <0){
+            posicaoInicialVertical = posicaoInicialVertical -velocidadeQueda;
+
+            }
+
+        }
+
+
+
+        //Animação do personagem
         variacao += deltaTime * 5;
         if(variacao >2) variacao =0;
 
+        //Tela voltar para o final
         if(posicaoMovimentoHorizontal < - larguraDispositivo){
             posicaoMovimentoHorizontal = larguraDispositivo;
         }
 
         if(posicaoMovimentoHorizontal2 < -larguraDispositivo - larguraDispositivo){
-            posicaoMovimentoHorizontal2 = posicaoMovimentoHorizontal + (larguraDispositivo /2);
+            posicaoMovimentoHorizontal2 = posicaoMovimentoHorizontal;
         }
 
         batch.begin();
 
         batch.draw(fundo,posicaoMovimentoHorizontal ,0 , larguraDispositivo,alturaDispositivo);
         batch.draw(fundo2,posicaoMovimentoHorizontal2 + larguraDispositivo ,0,larguraDispositivo,alturaDispositivo);
-        batch.draw(personagem[(int) variacao],1,120);
+        batch.draw(personagem[(int) variacao],50,posicaoInicialVertical);
 
 
 

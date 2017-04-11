@@ -62,13 +62,15 @@ public class GameIC extends ApplicationAdapter {
         variacao += deltaTime * 5;
         if(variacao >2) variacao =0;
 
-        if(posicaoMovimentoHorizontal < fundo.g)
+        if(posicaoMovimentoHorizontal < fundo.getWidth()){
+            posicaoMovimentoHorizontal = larguraDispositivo;
+        }
 
 
         batch.begin();
 
         batch.draw(fundo,posicaoMovimentoHorizontal ,0 , larguraDispositivo,alturaDispositivo);
-        batch.draw(fundo2,posicaoMovimentoHorizontal + larguraDispositivo ,0,larguraDispositivo,alturaDispositivo);
+       // batch.draw(fundo2,posicaoMovimentoHorizontal + larguraDispositivo ,0,larguraDispositivo,alturaDispositivo);
         batch.draw(personagem[(int) variacao],1,120);
 
 

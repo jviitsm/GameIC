@@ -27,7 +27,7 @@ public class GameIC extends ApplicationAdapter {
     private float larguraDispositivo;
     private float deltaTime;
     private float posicaoMovimentoHorizontal;
-    private float getPosicaoMovimentoHorizontal2;
+    private float posicaoMovimentoHorizontal2;
     private float variacao =0;
 
 
@@ -38,7 +38,7 @@ public class GameIC extends ApplicationAdapter {
         batch = new SpriteBatch();
 
         fundo = new Texture("city_night.jpg");
-        fundo2 = new Texture("city_night.jpg");
+        fundo2 = new Texture("city_morning.jpg");
         personagem = new Texture[3];
         personagem[0] = new Texture("man_stand.png");
         personagem[1]= new Texture("man_walk1.png");
@@ -57,20 +57,24 @@ public class GameIC extends ApplicationAdapter {
 
         deltaTime = Gdx.graphics.getDeltaTime();
 
-        posicaoMovimentoHorizontal -= deltaTime * 200;
+        posicaoMovimentoHorizontal -= deltaTime * 1000;
+        posicaoMovimentoHorizontal2 -= deltaTime * 1000;
 
         variacao += deltaTime * 5;
         if(variacao >2) variacao =0;
 
-        if(posicaoMovimentoHorizontal < fundo.getWidth()){
+        if(posicaoMovimentoHorizontal < - larguraDispositivo){
             posicaoMovimentoHorizontal = larguraDispositivo;
         }
 
+        if(posicaoMovimentoHorizontal2 < -larguraDispositivo - larguraDispositivo){
+            posicaoMovimentoHorizontal2 = posicaoMovimentoHorizontal + (larguraDispositivo /2);
+        }
 
         batch.begin();
 
         batch.draw(fundo,posicaoMovimentoHorizontal ,0 , larguraDispositivo,alturaDispositivo);
-       // batch.draw(fundo2,posicaoMovimentoHorizontal + larguraDispositivo ,0,larguraDispositivo,alturaDispositivo);
+        batch.draw(fundo2,posicaoMovimentoHorizontal2 + larguraDispositivo ,0,larguraDispositivo,alturaDispositivo);
         batch.draw(personagem[(int) variacao],1,120);
 
 

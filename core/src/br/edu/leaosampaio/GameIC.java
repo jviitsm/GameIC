@@ -126,7 +126,7 @@ public class GameIC extends ApplicationAdapter {
 
         batch.end();
 
-
+        //Cria o circulo no personagem para detectar colisões
         circuloPersonagem.set(50 + personagem[0].getWidth() /2,posicaoInicialVertical + personagem[0].getHeight() /2 - 10,
                 personagem[0].getWidth() /2 + 7);
 
@@ -140,7 +140,7 @@ public class GameIC extends ApplicationAdapter {
 */
 
 
-//Por enquanto musica n10
+
 
 	}
 

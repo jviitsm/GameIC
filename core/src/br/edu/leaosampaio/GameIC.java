@@ -2,6 +2,7 @@ package br.edu.leaosampaio;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -35,6 +36,7 @@ public class GameIC extends ApplicationAdapter {
     private float posicaoInicialVertical;
     private boolean pulou = false;
     private Circle circuloPersonagem;
+    private Music music;
 
 
 
@@ -52,6 +54,10 @@ public class GameIC extends ApplicationAdapter {
         personagem[0] = new Texture("man_stand.png");
         personagem[1]= new Texture("man_walk1.png");
         personagem[2] = new Texture("man_walk2.png");
+        music = Gdx.audio.newMusic(Gdx.files.internal("musicafunda.mp3"));
+        music.setLooping(true);
+        music.setVolume(0.4f);
+        music.play();
 
       alturaDispositivo = Gdx.graphics.getHeight();
       larguraDispositivo = Gdx.graphics.getWidth();
@@ -134,13 +140,15 @@ public class GameIC extends ApplicationAdapter {
 */
 
 
-
+//Por enquanto musica n10
 
 	}
 
 
     @Override
 	public void dispose () {
+        super.dispose();
+        music.dispose();
 
 	}
 }

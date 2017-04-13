@@ -28,6 +28,7 @@ public class GameIC extends Game {
     private Texture vida1,vida2,vida3;
     private BitmapFont pontos;
 
+
     //private ShapeRenderer shape;
 
 
@@ -44,7 +45,8 @@ public class GameIC extends Game {
     private float velocidadeQueda =0;
     private float posicaoInicialVertical;
     private boolean pulou = false;
-    private Circle circuloPersonagem, circuloPernilongo;
+    private Circle circuloPersonagem;
+    private Circle circuloPernilongo;
     private Music music;
     private int pontuacao;
     private float pontuacaoPosicao;
@@ -90,6 +92,8 @@ public class GameIC extends Game {
 
 
 
+
+
         music = Gdx.audio.newMusic(Gdx.files.internal("musicafunda.mp3"));
         music.setLooping(true);
         music.setVolume(0.4f);
@@ -97,7 +101,7 @@ public class GameIC extends Game {
 
       //alturaDispositivo = Gdx.graphics.getHeight();
       //larguraDispositivo = Gdx.graphics.getWidth();
-        posicaoInicialVertical = 80;
+        posicaoInicialVertical = 90;
         posicaoMovimentoMosquito = -100;
         numeroVidas = 3;
         estadoJogo =0;
@@ -155,8 +159,10 @@ public class GameIC extends Game {
             }
             deltaTime = Gdx.graphics.getDeltaTime();
 
+
             posicaoMovimentoHorizontal -= deltaTime * 300;
             posicaoMovimentoHorizontal2 -= deltaTime * 300;
+
             //muda velocidade do pernilongo de acordo com a pontuação
             if(pontuacao<=1000) {
                 posicaoMovimentoMosquito -= deltaTime * 350;
@@ -229,14 +235,14 @@ public class GameIC extends Game {
             estadoJogo = 2;
         }
 
-
-
         batch.end();
+        Gdx.app.log("y","po" + posicaoInicialVertical);
+        Gdx.app.log("posição + ver","posição + ver " +(posicaoInicialVertical + personagem[0].getHeight()) );
 
         //Cria o circulo no personagem para detectar colisões
-        circuloPersonagem.set(40 + personagem[0].getWidth() ,
-                posicaoInicialVertical + personagem[0].getHeight() /2 - 10,
-                personagem[0].getWidth() /2 + 7);
+        circuloPersonagem.set( 120 + personagem[0].getWidth() /2  ,
+                posicaoInicialVertical + personagem[0].getHeight() /2,
+                personagem[0].getWidth() );
 
         circuloPernilongo = new Circle(
                 posicaoMovimentoMosquito,
@@ -246,14 +252,16 @@ public class GameIC extends Game {
 
 
 
+
         shape.begin(ShapeRenderer.ShapeType.Filled);
         shape.circle(circuloPersonagem.x,circuloPersonagem.y,circuloPersonagem.radius);
         shape.circle(circuloPernilongo.x,circuloPernilongo.y,circuloPernilongo.radius);
+
         shape.setColor(Color.RED);
         shape.end();
 
         //Se houver colisão com o pernilongo retira 300 pontos do placar
-        if( Intersector.overlaps( circuloPersonagem, circuloPernilongo )){
+        /*if( Intersector.overlaps( circuloPernilongo, retPe )){
 //            Gdx.app.log("Colisão", "Houve colisão");
             if(houveColisao==false) {
                 pontuacao -= 300;
@@ -262,7 +270,7 @@ public class GameIC extends Game {
         } else {
             houveColisao = false;
         }
-
+    */
 	}
 
 

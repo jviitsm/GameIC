@@ -38,6 +38,11 @@ public class GameIC extends ApplicationAdapter {
     private Circle circuloPersonagem;
     private Music music;
 
+    private OrthographicCamera camera;
+    private Viewport viewport;
+    private final float VIRUAL_WIDTH =1366;
+    private final float VIRUAL_HEIGHT =1024;
+
 
 
 
@@ -59,19 +64,25 @@ public class GameIC extends ApplicationAdapter {
         music.setVolume(0.4f);
         music.play();
 
-      alturaDispositivo = Gdx.graphics.getHeight();
-      larguraDispositivo = Gdx.graphics.getWidth();
-       posicaoInicialVertical = 120;
+      //alturaDispositivo = Gdx.graphics.getHeight();
+      //larguraDispositivo = Gdx.graphics.getWidth();
+       posicaoInicialVertical = 80;
+        larguraDispositivo = VIRUAL_WIDTH;
+        alturaDispositivo = VIRUAL_HEIGHT;
 
 
+        camera = new OrthographicCamera();
+        camera.position.set(VIRUAL_WIDTH /2,VIRUAL_HEIGHT /2,0);
+        viewport = new StretchViewport(VIRUAL_WIDTH,VIRUAL_HEIGHT,camera);
 
 
 	}
 
 	@Override
 	public void render () {
+        camera.update();
 
-        if(posicaoInicialVertical <= 120){
+        if(posicaoInicialVertical <= 90){
             pulou = false;
         }
         deltaTime = Gdx.graphics.getDeltaTime();
@@ -82,7 +93,7 @@ public class GameIC extends ApplicationAdapter {
 
             if(Gdx.input.justTouched()){
                 if(pulou != true){
-                if(posicaoInicialVertical < 400){
+                if(posicaoInicialVertical < 350){
                         velocidadeQueda = -20;
 
                     }else{
@@ -94,7 +105,7 @@ public class GameIC extends ApplicationAdapter {
 
         else{
             velocidadeQueda ++;
-            if(posicaoInicialVertical > 120 || velocidadeQueda <0){
+            if(posicaoInicialVertical > 90 || velocidadeQueda <0){
             posicaoInicialVertical = posicaoInicialVertical -velocidadeQueda;
 
             }
@@ -116,6 +127,7 @@ public class GameIC extends ApplicationAdapter {
             posicaoMovimentoHorizontal2 = posicaoMovimentoHorizontal;
         }
 
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
         batch.draw(fundo,posicaoMovimentoHorizontal ,0 , larguraDispositivo,alturaDispositivo);
@@ -151,4 +163,7 @@ public class GameIC extends ApplicationAdapter {
         music.dispose();
 
 	}
+    public void resize(int width, int height) {
+        viewport.update(width,height);
+    }
 }

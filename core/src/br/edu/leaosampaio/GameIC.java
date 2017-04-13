@@ -93,8 +93,12 @@ public class GameIC extends ApplicationAdapter {
 
             if(Gdx.input.justTouched()){
                 if(pulou != true){
-                if(posicaoInicialVertical < 350){
+                if(posicaoInicialVertical < 300){
                         velocidadeQueda = -20;
+                    if(posicaoInicialVertical >= 300){
+                        posicaoInicialVertical =300;
+                        velocidadeQueda = 0;
+                    }
 
                     }else{
                     pulou = true;

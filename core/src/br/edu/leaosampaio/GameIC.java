@@ -240,13 +240,13 @@ public class GameIC extends Game {
         Gdx.app.log("posição + ver","posição + ver " +(posicaoInicialVertical + personagem[0].getHeight()) );
 
         //Cria o circulo no personagem para detectar colisões
-        circuloPersonagem.set( 120 + personagem[0].getWidth() /2  ,
-                posicaoInicialVertical + personagem[0].getHeight() /2,
-                personagem[0].getWidth() );
+        circuloPersonagem.set( 40 + personagem[0].getWidth() /2  ,
+                posicaoInicialVertical ,
+                personagem[0].getWidth() /2 );
 
         circuloPernilongo = new Circle(
                 posicaoMovimentoMosquito,
-                100 + (pernilongo[0].getHeight() /2),
+                100,
                 pernilongo[0].getWidth() /2
         );
 

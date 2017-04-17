@@ -20,6 +20,8 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.Random;
+
 public class GameIC extends Game {
 
     private SpriteBatch batch;
@@ -27,9 +29,12 @@ public class GameIC extends Game {
 	private Texture[] personagem, pernilongo;
     private Texture vida1,vida2,vida3;
     private BitmapFont pontos;
+    private float poPulo = 0;
+    private Random distanciaRandomica,alturaRandomica,numeroRandomico;
+    private int distanciaMosquitos,alturaMosquitos;
 
 
-    //private ShapeRenderer shape;
+
 
 
     //Atributos de configuração
@@ -47,14 +52,15 @@ public class GameIC extends Game {
     private boolean pulou = false;
     private Circle circuloPersonagem;
     private Circle circuloPernilongo;
+    private Rectangle retanguloPersonagem;
     private Music music;
     private int pontuacao;
     private float pontuacaoPosicao;
 
     private OrthographicCamera camera;
     private Viewport viewport;
-    private final float VIRUAL_WIDTH =1366;
-    private final float VIRUAL_HEIGHT =1024;
+    private final float VIRUAL_WIDTH =720;
+    private final float VIRUAL_HEIGHT =1080;
     private ShapeRenderer shape;
 
     public boolean houveColisao = false;
@@ -66,7 +72,12 @@ public class GameIC extends Game {
 	public void create () {
         batch = new SpriteBatch();
 
+        alturaRandomica = new Random();
+        distanciaRandomica = new Random();
+        numeroRandomico = new Random();
+
         circuloPersonagem = new Circle();
+        retanguloPersonagem = new Rectangle();
 
         shape = new ShapeRenderer();
 
@@ -99,8 +110,8 @@ public class GameIC extends Game {
         music.setVolume(0.4f);
         music.play();
 
-      //alturaDispositivo = Gdx.graphics.getHeight();
-      //larguraDispositivo = Gdx.graphics.getWidth();
+      alturaDispositivo = Gdx.graphics.getHeight();
+      larguraDispositivo = Gdx.graphics.getWidth();
         posicaoInicialVertical = 90;
         posicaoMovimentoMosquito = -100;
         numeroVidas = 3;
@@ -110,23 +121,24 @@ public class GameIC extends Game {
 
 
 
-        larguraDispositivo = VIRUAL_WIDTH;
+/*        larguraDispositivo = VIRUAL_WIDTH;
         alturaDispositivo = VIRUAL_HEIGHT;
 
 
         camera = new OrthographicCamera();
         camera.position.set(VIRUAL_WIDTH /2,VIRUAL_HEIGHT /2,0);
         viewport = new StretchViewport(VIRUAL_WIDTH,VIRUAL_HEIGHT,camera);
-
+*/
 
 	}
 
 	@Override
 	public void render () {
-        camera.update();
+  //      camera.update();
 
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+    //    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
+        poPulo = posicaoInicialVertical + velocidadeQueda;
 
 
         //Ajustar posição da pontuação na tela
@@ -139,6 +151,7 @@ public class GameIC extends Game {
         }else{
             pontuacaoPosicao = larguraDispositivo - 160;
         }
+
         //Somente para testes, remover
         if(pontuacao >9999) pontuacao =0;
         //Jogo pausado antes de clicar pela primeira vez
@@ -149,8 +162,10 @@ public class GameIC extends Game {
          //Apos o clique o jogo começa
         }else {
 
-            if(posicaoMovimentoMosquito<-5){
+            if(posicaoMovimentoMosquito <- larguraDispositivo){
                 posicaoMovimentoMosquito = larguraDispositivo + 10;
+                alturaMosquitos = alturaRandomica.nextInt(700) - 200;
+                distanciaMosquitos = distanciaRandomica.nextInt(500) - 300;
             }
 
             pontuacao ++;
@@ -211,14 +226,17 @@ public class GameIC extends Game {
             }
 
         }
-        batch.setProjectionMatrix(camera.combined);
+//     batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
 
         batch.draw(fundo,posicaoMovimentoHorizontal ,0 , larguraDispositivo,alturaDispositivo);
         batch.draw(fundo2,posicaoMovimentoHorizontal2 + larguraDispositivo ,0,larguraDispositivo,alturaDispositivo);
         batch.draw(personagem[(int) variacao],50,posicaoInicialVertical);
+
         batch.draw(pernilongo[(int) variacao], posicaoMovimentoMosquito , 100 );
+       batch.draw(pernilongo [ (int) variacao], posicaoMovimentoMosquito + distanciaMosquitos, 100 + alturaMosquitos);
+
         pontos.draw(batch,String.valueOf(pontuacao),pontuacaoPosicao,alturaDispositivo -30);
 
         //Vidas
@@ -236,27 +254,35 @@ public class GameIC extends Game {
         }
 
         batch.end();
-        Gdx.app.log("y","po" + posicaoInicialVertical);
-        Gdx.app.log("posição + ver","posição + ver " +(posicaoInicialVertical + personagem[0].getHeight()) );
+
 
         //Cria o circulo no personagem para detectar colisões
-        circuloPersonagem.set( 40 + personagem[0].getWidth() /2  ,
-                posicaoInicialVertical ,
+        /*circuloPersonagem.set(
+                50 + personagem[0].getWidth() /2  ,
+                posicaoInicialVertical + personagem[0].getHeight() /2,
                 personagem[0].getWidth() /2 );
-
+*/
         circuloPernilongo = new Circle(
-                posicaoMovimentoMosquito,
-                100,
+                posicaoMovimentoMosquito +pernilongo[0].getWidth() /2,
+                100 + pernilongo[0].getHeight() /2,
                 pernilongo[0].getWidth() /2
+        );
+        retanguloPersonagem = new Rectangle(
+                50 ,
+                posicaoInicialVertical ,
+                personagem[0].getWidth() ,
+                personagem[0].getHeight()
         );
 
 
 
 
         shape.begin(ShapeRenderer.ShapeType.Filled);
-        shape.circle(circuloPersonagem.x,circuloPersonagem.y,circuloPersonagem.radius);
-        shape.circle(circuloPernilongo.x,circuloPernilongo.y,circuloPernilongo.radius);
 
+  //      shape.circle(circuloPersonagem.x,circuloPersonagem.y,circuloPersonagem.radius);
+
+        shape.circle(circuloPernilongo.x,circuloPernilongo.y,circuloPernilongo.radius);
+        shape.rect(retanguloPersonagem.x,retanguloPersonagem.y,retanguloPersonagem.width,retanguloPersonagem.height);
         shape.setColor(Color.RED);
         shape.end();
 
@@ -280,7 +306,7 @@ public class GameIC extends Game {
         music.dispose();
 
 	}
-    public void resize(int width, int height) {
-        viewport.update(width,height);
-    }
+  //  public void resize(int width, int height) {
+    //    viewport.update(width,height);
+    //}
 }

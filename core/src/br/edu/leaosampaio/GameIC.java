@@ -146,7 +146,7 @@ public class GameIC extends Game {
             if(Gdx.input.justTouched()){
                 estadoJogo =1;
             }
-         //Apois o clique o jogo começa
+         //Apos o clique o jogo começa
         }else {
 
             if(posicaoMovimentoMosquito<-5){

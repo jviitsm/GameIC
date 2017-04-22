@@ -29,7 +29,6 @@ public class GameIC extends Game {
 	private Texture[] personagem, pernilongo;
     private Texture vida1,vida2,vida3;
     private BitmapFont pontos;
-    private float poPulo = 0;
     private Random distanciaRandomica,alturaRandomica,numeroRandomico;
     private int distanciaMosquitos,alturaMosquitos;
 
@@ -70,6 +69,7 @@ public class GameIC extends Game {
 
 	@Override
 	public void create () {
+
         batch = new SpriteBatch();
 
         alturaRandomica = new Random();
@@ -102,9 +102,6 @@ public class GameIC extends Game {
         vida3 = new Texture("vida2.png");
 
 
-
-
-
         music = Gdx.audio.newMusic(Gdx.files.internal("musicafunda.mp3"));
         music.setLooping(true);
         music.setVolume(0.4f);
@@ -112,8 +109,10 @@ public class GameIC extends Game {
 
       alturaDispositivo = Gdx.graphics.getHeight();
       larguraDispositivo = Gdx.graphics.getWidth();
+
         posicaoInicialVertical = 90;
         posicaoMovimentoMosquito = -100;
+
         numeroVidas = 3;
         estadoJogo =0;
         pontuacao =0;
@@ -134,11 +133,11 @@ public class GameIC extends Game {
 
 	@Override
 	public void render () {
-  //      camera.update();
 
-    //    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+    // camera.update();
+    // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        poPulo = posicaoInicialVertical + velocidadeQueda;
+
 
 
         //Ajustar posição da pontuação na tela
@@ -152,13 +151,14 @@ public class GameIC extends Game {
             pontuacaoPosicao = larguraDispositivo - 160;
         }
 
-        //Somente para testes, remover
-        if(pontuacao >9999) pontuacao =0;
+
         //Jogo pausado antes de clicar pela primeira vez
         if(estadoJogo ==0){
             if(Gdx.input.justTouched()){
                 estadoJogo =1;
             }
+
+
          //Apos o clique o jogo começa
         }else {
 
@@ -168,10 +168,11 @@ public class GameIC extends Game {
                 distanciaMosquitos = distanciaRandomica.nextInt(500) - 300;
             }
 
-            pontuacao ++;
+
             if (posicaoInicialVertical <= 90) {
                 pulou = false;
             }
+
             deltaTime = Gdx.graphics.getDeltaTime();
 
 
@@ -187,6 +188,14 @@ public class GameIC extends Game {
                 posicaoMovimentoMosquito -= deltaTime * 650;
             } else {
                 posicaoMovimentoMosquito -= deltaTime * 800;
+            }
+
+            if(houveColisao == true){
+                Gdx.app.log("Aqui", "1" +houveColisao );
+                if(posicaoMovimentoMosquito < 50 - personagem[0].getWidth()){
+                    houveColisao = false;
+                    Gdx.app.log("Aqui2", "2 " + posicaoMovimentoMosquito);
+                }
             }
 
 
@@ -235,6 +244,8 @@ public class GameIC extends Game {
         batch.draw(personagem[(int) variacao],50,posicaoInicialVertical);
 
         batch.draw(pernilongo[(int) variacao], posicaoMovimentoMosquito , 100 );
+
+       //Mosquito 2
        batch.draw(pernilongo [ (int) variacao], posicaoMovimentoMosquito + distanciaMosquitos, 100 + alturaMosquitos);
 
         pontos.draw(batch,String.valueOf(pontuacao),pontuacaoPosicao,alturaDispositivo -30);
@@ -252,6 +263,7 @@ public class GameIC extends Game {
         } else{
             estadoJogo = 2;
         }
+
 
         batch.end();
 
@@ -297,6 +309,14 @@ public class GameIC extends Game {
             houveColisao = false;
         }
     */
+        if(Intersector.overlaps(circuloPernilongo,retanguloPersonagem)){
+            if(houveColisao == false){
+                numeroVidas --;
+                houveColisao = true;
+
+            }
+        }
+
 	}
 
 

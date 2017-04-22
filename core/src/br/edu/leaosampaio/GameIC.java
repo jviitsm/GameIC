@@ -27,7 +27,7 @@ public class GameIC extends Game {
     private SpriteBatch batch;
     private Texture fundo,fundo2;
 	private Texture[] personagem, pernilongo;
-    private Texture vida1,vida2,vida3;
+    private Texture vida1,vida2,vida3,gameOver;
     private BitmapFont pontos;
     private Random distanciaRandomica,alturaRandomica,numeroRandomico;
     private int distanciaMosquitos,alturaMosquitos;
@@ -52,7 +52,7 @@ public class GameIC extends Game {
     private Circle circuloPersonagem;
     private Circle circuloPernilongo;
     private Rectangle retanguloPersonagem;
-    private Music music;
+    private Music music,gameOverSound;
     private int pontuacao;
     private float pontuacaoPosicao;
 
@@ -100,6 +100,11 @@ public class GameIC extends Game {
         vida1 = new Texture("vida2.png");
         vida2 = new Texture("vida2.png");
         vida3 = new Texture("vida2.png");
+
+        gameOver = new Texture("gameover.png");
+        gameOverSound = Gdx.audio.newMusic(Gdx.files.internal("gameover.mp3"));
+        gameOverSound.setLooping(false);
+        gameOverSound.setVolume(1);
 
 
         music = Gdx.audio.newMusic(Gdx.files.internal("musicafunda.mp3"));
@@ -156,11 +161,18 @@ public class GameIC extends Game {
         if(estadoJogo ==0){
             if(Gdx.input.justTouched()){
                 estadoJogo =1;
+                if(!music.isPlaying()){
+                    music.play();
+                }
             }
 
 
+
          //Apos o clique o jogo começa
-        }else {
+        }if(estadoJogo ==1) {
+            if(!music.isPlaying()){
+                music.play();
+            }
 
             if(posicaoMovimentoMosquito <- larguraDispositivo){
                 posicaoMovimentoMosquito = larguraDispositivo + 10;
@@ -234,6 +246,21 @@ public class GameIC extends Game {
                 posicaoMovimentoHorizontal2 = posicaoMovimentoHorizontal;
             }
 
+
+        }if(estadoJogo ==2){
+            music.stop();
+            gameOverSound.play();
+            if(Gdx.input.justTouched()){
+                    estadoJogo = 0;
+                    numeroVidas = 3;
+                    posicaoMovimentoMosquito = -100;
+                    posicaoInicialVertical = 90;
+                    music.play();
+                    pontuacao =0;
+                    houveColisao = false;
+
+                      gameOverSound.stop();
+            }
         }
 //     batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -246,9 +273,12 @@ public class GameIC extends Game {
         batch.draw(pernilongo[(int) variacao], posicaoMovimentoMosquito , 100 );
 
        //Mosquito 2
-       batch.draw(pernilongo [ (int) variacao], posicaoMovimentoMosquito + distanciaMosquitos, 100 + alturaMosquitos);
-
+       //batch.draw(pernilongo [ (int) variacao], posicaoMovimentoMosquito + distanciaMosquitos, 100 + alturaMosquitos);
         pontos.draw(batch,String.valueOf(pontuacao),pontuacaoPosicao,alturaDispositivo -30);
+
+        if(estadoJogo ==2){
+            batch.draw(gameOver,larguraDispositivo /2 - gameOver.getWidth() /2,alturaDispositivo /2 - gameOver.getHeight() /2);
+        }
 
         //Vidas
         if(numeroVidas == 3){

@@ -318,7 +318,7 @@ public class GameIC extends Game {
 
 
 
-
+/*
         shape.begin(ShapeRenderer.ShapeType.Filled);
 
   //      shape.circle(circuloPersonagem.x,circuloPersonagem.y,circuloPersonagem.radius);

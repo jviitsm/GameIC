@@ -99,7 +99,7 @@ public class GameIC extends Game {
 
         pontos = new BitmapFont();
         pontos.setColor(Color.WHITE);
-        pontos.getData().setScale(5);
+        pontos.getData().setScale(3);
 
 
 
@@ -156,9 +156,9 @@ public class GameIC extends Game {
         if(pontuacao >= 0 && pontuacao < 10){
             pontuacaoPosicao = larguraDispositivo -50;
         }else if(pontuacao >= 10 && pontuacao < 100 ){
-            pontuacaoPosicao = larguraDispositivo - 80;
+            pontuacaoPosicao = larguraDispositivo -80;
         }else if(pontuacao >= 100 && pontuacao < 999){
-            pontuacaoPosicao = larguraDispositivo - 120;
+            pontuacaoPosicao = larguraDispositivo -130;
         }else{
             pontuacaoPosicao = larguraDispositivo - 160;
         }
@@ -275,7 +275,7 @@ public class GameIC extends Game {
 
         batch.draw(fundo,posicaoMovimentoHorizontal ,0 , larguraDispositivo,alturaDispositivo);
         batch.draw(fundo2,posicaoMovimentoHorizontal2 + larguraDispositivo ,0,larguraDispositivo,alturaDispositivo);
-        //batch.draw(pneu,posicaoMovimentoMosquito,50);
+        batch.draw(pneu,posicaoMovimentoMosquito,50);
         batch.draw(personagem[(int) variacao],50,posicaoInicialVertical);
         batch.draw(pernilongo[(int) variacao], posicaoMovimentoMosquito , 68.75f );
 
@@ -289,14 +289,14 @@ public class GameIC extends Game {
 
         //Vidas
         if(numeroVidas == 3){
-            batch.draw(vida1,20,alturaDispositivo -68.75f) ;
-            batch.draw(vida2,20 + vida1.getWidth(),alturaDispositivo -68.75f);
-            batch.draw(vida3,20 + vida1.getWidth() + vida1.getWidth(),alturaDispositivo -68.75f);
+            batch.draw(vida1,2,alturaDispositivo -100) ;
+            batch.draw(vida2,2 + vida1.getWidth(),alturaDispositivo -100);
+            batch.draw(vida3,2 + vida1.getWidth() + vida1.getWidth(),alturaDispositivo -100);
         } else if(numeroVidas ==2){
-            batch.draw(vida1,20,alturaDispositivo -68.75f) ;
-            batch.draw(vida2,20 + vida1.getWidth(),alturaDispositivo -68.75f);
+            batch.draw(vida1,2,alturaDispositivo -100) ;
+            batch.draw(vida2,2 + vida1.getWidth(),alturaDispositivo -100);
         } else if(numeroVidas ==1){
-            batch.draw(vida1,20,alturaDispositivo -68.75f) ;
+            batch.draw(vida1,2,alturaDispositivo -100) ;
         } else{
             estadoJogo = 2;
         }
@@ -308,14 +308,14 @@ public class GameIC extends Game {
 
         circuloPernilongo = new Circle(
                 posicaoMovimentoMosquito ,
-                68.75f + pernilongo[0].getHeight() /2,
+                pernilongo[0].getHeight() /2,
                 pernilongo[0].getWidth() /2
         );
         retanguloPersonagem = new Rectangle(
                 50 ,
                 posicaoInicialVertical,
-                60 ,
-                70
+                personagem[1].getWidth(),
+                personagem[1].getHeight()
         );
 
 

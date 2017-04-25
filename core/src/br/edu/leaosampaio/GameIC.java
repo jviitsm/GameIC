@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -27,7 +28,7 @@ public class GameIC extends Game {
     private SpriteBatch batch;
     private Texture fundo,fundo2;
 	private Texture[] personagem, pernilongo;
-    private Texture vida1,vida2,vida3,gameOver;
+    private Texture vida1,vida2,vida3,gameOver,pneu;
     private BitmapFont pontos;
     private Random distanciaRandomica,alturaRandomica,numeroRandomico;
     private int distanciaMosquitos,alturaMosquitos;
@@ -37,7 +38,7 @@ public class GameIC extends Game {
 
 
     //Atributos de configuração
-    private float numeroVidas;
+    private float numeroVidas,pulo;
     private int estadoJogo;
     private float alturaDispositivo;
     private float larguraDispositivo;
@@ -58,8 +59,8 @@ public class GameIC extends Game {
 
     private OrthographicCamera camera;
     private Viewport viewport;
-    private final float VIRUAL_WIDTH =720;
-    private final float VIRUAL_HEIGHT =1080;
+    private final float VIRUAL_WIDTH =800;
+    private final float VIRUAL_HEIGHT =600;
     private ShapeRenderer shape;
 
     public boolean houveColisao = false;
@@ -69,6 +70,8 @@ public class GameIC extends Game {
 
 	@Override
 	public void create () {
+
+
 
         batch = new SpriteBatch();
 
@@ -81,20 +84,23 @@ public class GameIC extends Game {
 
         shape = new ShapeRenderer();
 
-        fundo = new Texture("city_morning.jpg");
-        fundo2 = new Texture("city_morning.jpg");
+        fundo = new Texture("city_morning2.png");
+        fundo2 = new Texture("city_morning2.png");
         personagem = new Texture[3];
-        personagem[0] = new Texture("man_stand.png");
-        personagem[1]= new Texture("man_walk1.png");
-        personagem[2] = new Texture("man_walk2.png");
+        personagem[0] = new Texture("man_stand.png.png");
+        personagem[1]= new Texture("man_walk1.png.png");
+        personagem[2] = new Texture("man_walk2.png.png");
 
         pernilongo = new Texture[2];
-        pernilongo[0] = new Texture("mosquito1.png");
-        pernilongo[1] = new Texture("mosquito2.png");
+        pernilongo[0] = new Texture("mosquito1.png.png");
+        pernilongo[1] = new Texture("mosquito2.png.png");
+
+        pneu = new Texture("pneu2.png");
 
         pontos = new BitmapFont();
         pontos.setColor(Color.WHITE);
         pontos.getData().setScale(5);
+
 
 
         vida1 = new Texture("vida2.png");
@@ -115,32 +121,33 @@ public class GameIC extends Game {
       alturaDispositivo = Gdx.graphics.getHeight();
       larguraDispositivo = Gdx.graphics.getWidth();
 
-        posicaoInicialVertical = 90;
-        posicaoMovimentoMosquito = -100;
+        posicaoInicialVertical = 61.875f;
+        posicaoMovimentoMosquito = -141.67f;
 
         numeroVidas = 3;
         estadoJogo =0;
         pontuacao =0;
         pontuacaoPosicao = 0;
+        pulo = 0;
 
 
 
-/*        larguraDispositivo = VIRUAL_WIDTH;
+       larguraDispositivo = VIRUAL_WIDTH;
         alturaDispositivo = VIRUAL_HEIGHT;
 
 
         camera = new OrthographicCamera();
         camera.position.set(VIRUAL_WIDTH /2,VIRUAL_HEIGHT /2,0);
         viewport = new StretchViewport(VIRUAL_WIDTH,VIRUAL_HEIGHT,camera);
-*/
+
 
 	}
 
 	@Override
 	public void render () {
 
-    // camera.update();
-    // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+     camera.update();
+     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 
 
@@ -173,38 +180,38 @@ public class GameIC extends Game {
             if(!music.isPlaying()){
                 music.play();
             }
-
+    pontuacao++;
             if(posicaoMovimentoMosquito <- larguraDispositivo){
-                posicaoMovimentoMosquito = larguraDispositivo + 10;
+                posicaoMovimentoMosquito = larguraDispositivo + 5.833f;
                 alturaMosquitos = alturaRandomica.nextInt(700) - 200;
                 distanciaMosquitos = distanciaRandomica.nextInt(500) - 300;
             }
 
 
-            if (posicaoInicialVertical <= 90) {
+            if (posicaoInicialVertical <= 61.875f) {
                 pulou = false;
             }
 
             deltaTime = Gdx.graphics.getDeltaTime();
 
 
-            posicaoMovimentoHorizontal -= deltaTime * 300;
-            posicaoMovimentoHorizontal2 -= deltaTime * 300;
+            posicaoMovimentoHorizontal -= deltaTime * 174.99f;
+            posicaoMovimentoHorizontal2 -= deltaTime * 174.99f;
 
             //muda velocidade do pernilongo de acordo com a pontuação
             if(pontuacao<=1000) {
-                posicaoMovimentoMosquito -= deltaTime * 350;
+                posicaoMovimentoMosquito -= deltaTime * 204.155f;
             } else if(pontuacao>=1000 && pontuacao<3000){
-                posicaoMovimentoMosquito -= deltaTime * 550;
+                posicaoMovimentoMosquito -= deltaTime * 320.815f;
             } else if(pontuacao>=3000 && pontuacao<5000){
-                posicaoMovimentoMosquito -= deltaTime * 650;
+                posicaoMovimentoMosquito -= deltaTime * 379.145f;
             } else {
-                posicaoMovimentoMosquito -= deltaTime * 800;
+                posicaoMovimentoMosquito -= deltaTime * 466.64f;
             }
 
             if(houveColisao == true){
                 Gdx.app.log("Aqui", "1" +houveColisao );
-                if(posicaoMovimentoMosquito < 50 - personagem[0].getWidth()){
+                if(posicaoMovimentoMosquito < 29.165f - personagem[0].getWidth()){
                     houveColisao = false;
                     Gdx.app.log("Aqui2", "2 " + posicaoMovimentoMosquito);
                 }
@@ -213,10 +220,10 @@ public class GameIC extends Game {
 
             if (Gdx.input.justTouched()) {
                 if (pulou != true) {
-                    if (posicaoInicialVertical < 300) {
-                        velocidadeQueda = -20;
-                        if (posicaoInicialVertical >= 300) {
-                            posicaoInicialVertical = 300;
+                    if (posicaoInicialVertical < 206.25f) {
+                        velocidadeQueda = -13.75f;
+                        if (posicaoInicialVertical >= 174.99f) {
+                            posicaoInicialVertical = 174.99f;
                             velocidadeQueda = 0;
                         }
 
@@ -226,7 +233,7 @@ public class GameIC extends Game {
                 }
             } else {
                 velocidadeQueda++;
-                if (posicaoInicialVertical > 90 || velocidadeQueda < 0) {
+                if (posicaoInicialVertical > 61.875f || velocidadeQueda < 0) {
                     posicaoInicialVertical = posicaoInicialVertical - velocidadeQueda;
 
                 }
@@ -253,8 +260,8 @@ public class GameIC extends Game {
             if(Gdx.input.justTouched()){
                     estadoJogo = 0;
                     numeroVidas = 3;
-                    posicaoMovimentoMosquito = -100;
-                    posicaoInicialVertical = 90;
+                    posicaoMovimentoMosquito = -141.67f;
+                    posicaoInicialVertical = 61.875f;
                     music.play();
                     pontuacao =0;
                     houveColisao = false;
@@ -262,19 +269,19 @@ public class GameIC extends Game {
                       gameOverSound.stop();
             }
         }
-//     batch.setProjectionMatrix(camera.combined);
+    batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
 
         batch.draw(fundo,posicaoMovimentoHorizontal ,0 , larguraDispositivo,alturaDispositivo);
         batch.draw(fundo2,posicaoMovimentoHorizontal2 + larguraDispositivo ,0,larguraDispositivo,alturaDispositivo);
+        //batch.draw(pneu,posicaoMovimentoMosquito,50);
         batch.draw(personagem[(int) variacao],50,posicaoInicialVertical);
-
-        batch.draw(pernilongo[(int) variacao], posicaoMovimentoMosquito , 100 );
+        batch.draw(pernilongo[(int) variacao], posicaoMovimentoMosquito , 68.75f );
 
        //Mosquito 2
        //batch.draw(pernilongo [ (int) variacao], posicaoMovimentoMosquito + distanciaMosquitos, 100 + alturaMosquitos);
-        pontos.draw(batch,String.valueOf(pontuacao),pontuacaoPosicao,alturaDispositivo -30);
+        pontos.draw(batch,String.valueOf(pontuacao),pontuacaoPosicao,alturaDispositivo -20.625f);
 
         if(estadoJogo ==2){
             batch.draw(gameOver,larguraDispositivo /2 - gameOver.getWidth() /2,alturaDispositivo /2 - gameOver.getHeight() /2);
@@ -282,14 +289,14 @@ public class GameIC extends Game {
 
         //Vidas
         if(numeroVidas == 3){
-            batch.draw(vida1,20,alturaDispositivo - 100) ;
-            batch.draw(vida2,20 + vida1.getWidth(),alturaDispositivo -100);
-            batch.draw(vida3,20 + vida1.getWidth() + vida1.getWidth(),alturaDispositivo -100);
+            batch.draw(vida1,20,alturaDispositivo -68.75f) ;
+            batch.draw(vida2,20 + vida1.getWidth(),alturaDispositivo -68.75f);
+            batch.draw(vida3,20 + vida1.getWidth() + vida1.getWidth(),alturaDispositivo -68.75f);
         } else if(numeroVidas ==2){
-            batch.draw(vida1,20,alturaDispositivo - 100) ;
-            batch.draw(vida2,20 + vida1.getWidth(),alturaDispositivo -100);
+            batch.draw(vida1,20,alturaDispositivo -68.75f) ;
+            batch.draw(vida2,20 + vida1.getWidth(),alturaDispositivo -68.75f);
         } else if(numeroVidas ==1){
-            batch.draw(vida1,20,alturaDispositivo - 100) ;
+            batch.draw(vida1,20,alturaDispositivo -68.75f) ;
         } else{
             estadoJogo = 2;
         }
@@ -297,31 +304,25 @@ public class GameIC extends Game {
 
         batch.end();
 
+        shape.setProjectionMatrix(batch.getProjectionMatrix());
 
-        //Cria o circulo no personagem para detectar colisões
-        /*circuloPersonagem.set(
-                50 + personagem[0].getWidth() /2  ,
-                posicaoInicialVertical + personagem[0].getHeight() /2,
-                personagem[0].getWidth() /2 );
-*/
         circuloPernilongo = new Circle(
-                posicaoMovimentoMosquito +pernilongo[0].getWidth() /2,
-                100 + pernilongo[0].getHeight() /2,
+                posicaoMovimentoMosquito ,
+                68.75f + pernilongo[0].getHeight() /2,
                 pernilongo[0].getWidth() /2
         );
         retanguloPersonagem = new Rectangle(
                 50 ,
-                posicaoInicialVertical ,
-                personagem[0].getWidth() ,
-                personagem[0].getHeight()
+                posicaoInicialVertical,
+                60 ,
+                70
         );
 
 
 
-/*
+
         shape.begin(ShapeRenderer.ShapeType.Filled);
 
-  //      shape.circle(circuloPersonagem.x,circuloPersonagem.y,circuloPersonagem.radius);
 
         shape.circle(circuloPernilongo.x,circuloPernilongo.y,circuloPernilongo.radius);
         shape.rect(retanguloPersonagem.x,retanguloPersonagem.y,retanguloPersonagem.width,retanguloPersonagem.height);
@@ -356,7 +357,7 @@ public class GameIC extends Game {
         music.dispose();
 
 	}
-  //  public void resize(int width, int height) {
-    //    viewport.update(width,height);
-    //}
+    public void resize(int width, int height) {
+      viewport.update(width,height);
+    }
 }

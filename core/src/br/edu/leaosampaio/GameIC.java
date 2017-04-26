@@ -47,10 +47,12 @@ public class GameIC extends Game {
     private float posicaoMovimentoHorizontal2; //pelo amor de Deus, procure outros nomes, nada de 1,2,3,4,5... kkkk
     private float posicaoMovimentoMosquito;
     private float variacao =0;
+    private float posicaoHorizontalPneu;
     private float velocidadeQueda =0;
     private float posicaoInicialVertical;
     private boolean pulou = false;
     private Circle circuloPersonagem;
+    private Circle circuloPneu;
     private Circle circuloPernilongo;
     private Rectangle retanguloPersonagem;
     private Music music,gameOverSound;
@@ -79,8 +81,11 @@ public class GameIC extends Game {
         distanciaRandomica = new Random();
         numeroRandomico = new Random();
 
+
         circuloPersonagem = new Circle();
+        circuloPneu = new Circle();
         retanguloPersonagem = new Rectangle();
+
 
         shape = new ShapeRenderer();
 
@@ -92,8 +97,8 @@ public class GameIC extends Game {
         personagem[2] = new Texture("man_walk2.png.png");
 
         pernilongo = new Texture[2];
-        pernilongo[0] = new Texture("mosquito1.png.png");
-        pernilongo[1] = new Texture("mosquito2.png.png");
+        pernilongo[0] = new Texture("mosquito1.png");
+        pernilongo[1] = new Texture("mosquito2.png");
 
         pneu = new Texture("pneu2.png");
 
@@ -121,7 +126,7 @@ public class GameIC extends Game {
       alturaDispositivo = Gdx.graphics.getHeight();
       larguraDispositivo = Gdx.graphics.getWidth();
 
-        posicaoInicialVertical = 61.875f;
+        posicaoInicialVertical = 45;
         posicaoMovimentoMosquito = -141.67f;
 
         numeroVidas = 3;
@@ -129,7 +134,7 @@ public class GameIC extends Game {
         pontuacao =0;
         pontuacaoPosicao = 0;
         pulo = 0;
-
+        posicaoHorizontalPneu = 500;
 
 
        larguraDispositivo = VIRUAL_WIDTH;
@@ -154,13 +159,13 @@ public class GameIC extends Game {
 
         //Ajustar posição da pontuação na tela
         if(pontuacao >= 0 && pontuacao < 10){
-            pontuacaoPosicao = larguraDispositivo -50;
+            pontuacaoPosicao = larguraDispositivo -45;
         }else if(pontuacao >= 10 && pontuacao < 100 ){
-            pontuacaoPosicao = larguraDispositivo -80;
+            pontuacaoPosicao = larguraDispositivo -65;
         }else if(pontuacao >= 100 && pontuacao < 999){
-            pontuacaoPosicao = larguraDispositivo -130;
+            pontuacaoPosicao = larguraDispositivo -85;
         }else{
-            pontuacaoPosicao = larguraDispositivo - 160;
+            pontuacaoPosicao = larguraDispositivo - 105;
         }
 
 
@@ -172,6 +177,7 @@ public class GameIC extends Game {
                     music.play();
                 }
             }
+
 
 
 
@@ -188,30 +194,46 @@ public class GameIC extends Game {
             }
 
 
-            if (posicaoInicialVertical <= 61.875f) {
+            if (posicaoInicialVertical <= 45) {
                 pulou = false;
             }
 
             deltaTime = Gdx.graphics.getDeltaTime();
 
 
-            posicaoMovimentoHorizontal -= deltaTime * 174.99f;
-            posicaoMovimentoHorizontal2 -= deltaTime * 174.99f;
+            if(posicaoHorizontalPneu <- larguraDispositivo){
+                posicaoHorizontalPneu = larguraDispositivo + 20;
+            }
+
+
+
 
             //muda velocidade do pernilongo de acordo com a pontuação
             if(pontuacao<=1000) {
+                posicaoMovimentoHorizontal -= deltaTime * 174.99f;
+                posicaoMovimentoHorizontal2 -= deltaTime * 174.99f;
+                posicaoHorizontalPneu -= deltaTime * 174.99f;
                 posicaoMovimentoMosquito -= deltaTime * 204.155f;
             } else if(pontuacao>=1000 && pontuacao<3000){
+                posicaoMovimentoHorizontal -= deltaTime * 250;
+                posicaoMovimentoHorizontal2 -= deltaTime * 250;
+                posicaoHorizontalPneu -= deltaTime * 250;
                 posicaoMovimentoMosquito -= deltaTime * 320.815f;
             } else if(pontuacao>=3000 && pontuacao<5000){
+                posicaoMovimentoHorizontal -= deltaTime * 400;
+                posicaoMovimentoHorizontal2 -= deltaTime * 400;
+                posicaoHorizontalPneu -= deltaTime * 400;
                 posicaoMovimentoMosquito -= deltaTime * 379.145f;
             } else {
+                posicaoMovimentoHorizontal -= deltaTime * 1000;
+                posicaoMovimentoHorizontal2 -= deltaTime * 1000;
+                posicaoHorizontalPneu -= deltaTime * 1000;
                 posicaoMovimentoMosquito -= deltaTime * 466.64f;
             }
 
             if(houveColisao == true){
                 Gdx.app.log("Aqui", "1" +houveColisao );
-                if(posicaoMovimentoMosquito < 29.165f - personagem[0].getWidth()){
+                if(posicaoMovimentoMosquito < 15 - personagem[0].getWidth()){
                     houveColisao = false;
                     Gdx.app.log("Aqui2", "2 " + posicaoMovimentoMosquito);
                 }
@@ -232,8 +254,8 @@ public class GameIC extends Game {
                     }
                 }
             } else {
-                velocidadeQueda++;
-                if (posicaoInicialVertical > 61.875f || velocidadeQueda < 0) {
+                velocidadeQueda += 0.7;
+                if (posicaoInicialVertical > 45 || velocidadeQueda < 0) {
                     posicaoInicialVertical = posicaoInicialVertical - velocidadeQueda;
 
                 }
@@ -261,7 +283,7 @@ public class GameIC extends Game {
                     estadoJogo = 0;
                     numeroVidas = 3;
                     posicaoMovimentoMosquito = -141.67f;
-                    posicaoInicialVertical = 61.875f;
+                    posicaoInicialVertical = 45;
                     music.play();
                     pontuacao =0;
                     houveColisao = false;
@@ -275,12 +297,12 @@ public class GameIC extends Game {
 
         batch.draw(fundo,posicaoMovimentoHorizontal ,0 , larguraDispositivo,alturaDispositivo);
         batch.draw(fundo2,posicaoMovimentoHorizontal2 + larguraDispositivo ,0,larguraDispositivo,alturaDispositivo);
-        batch.draw(pneu,posicaoMovimentoMosquito,50);
+        batch.draw(pneu,posicaoHorizontalPneu,30);
         batch.draw(personagem[(int) variacao],50,posicaoInicialVertical);
         batch.draw(pernilongo[(int) variacao], posicaoMovimentoMosquito , 68.75f );
 
        //Mosquito 2
-       //batch.draw(pernilongo [ (int) variacao], posicaoMovimentoMosquito + distanciaMosquitos, 100 + alturaMosquitos);
+       batch.draw(pernilongo [ (int) variacao], posicaoMovimentoMosquito + distanciaMosquitos, 100 + alturaMosquitos);
         pontos.draw(batch,String.valueOf(pontuacao),pontuacaoPosicao,alturaDispositivo -20.625f);
 
         if(estadoJogo ==2){
@@ -289,14 +311,14 @@ public class GameIC extends Game {
 
         //Vidas
         if(numeroVidas == 3){
-            batch.draw(vida1,2,alturaDispositivo -100) ;
-            batch.draw(vida2,2 + vida1.getWidth(),alturaDispositivo -100);
-            batch.draw(vida3,2 + vida1.getWidth() + vida1.getWidth(),alturaDispositivo -100);
+            batch.draw(vida1,5,alturaDispositivo -65) ;
+            batch.draw(vida2,5 + vida1.getWidth(),alturaDispositivo -65);
+            batch.draw(vida3,5 + vida1.getWidth() + vida1.getWidth(),alturaDispositivo -65);
         } else if(numeroVidas ==2){
-            batch.draw(vida1,2,alturaDispositivo -100) ;
-            batch.draw(vida2,2 + vida1.getWidth(),alturaDispositivo -100);
+            batch.draw(vida1,5,alturaDispositivo -65) ;
+            batch.draw(vida2,5 + vida1.getWidth(),alturaDispositivo -65);
         } else if(numeroVidas ==1){
-            batch.draw(vida1,2,alturaDispositivo -100) ;
+            batch.draw(vida1,5,alturaDispositivo -65) ;
         } else{
             estadoJogo = 2;
         }
@@ -307,9 +329,9 @@ public class GameIC extends Game {
         shape.setProjectionMatrix(batch.getProjectionMatrix());
 
         circuloPernilongo = new Circle(
-                posicaoMovimentoMosquito ,
-                pernilongo[0].getHeight() /2,
-                pernilongo[0].getWidth() /2
+                posicaoMovimentoMosquito + pernilongo[0].getWidth() /2 ,
+                70 + pernilongo[0].getHeight() /2,
+                pernilongo[0].getWidth() /3 + 5
         );
         retanguloPersonagem = new Rectangle(
                 50 ,
@@ -317,18 +339,26 @@ public class GameIC extends Game {
                 personagem[1].getWidth(),
                 personagem[1].getHeight()
         );
+        circuloPneu = new Circle(
+                posicaoHorizontalPneu + pneu.getWidth() /2,
+                50 + pneu.getHeight() /2,
+                pneu.getWidth()/2
+
+                );
 
 
 
 
-        shape.begin(ShapeRenderer.ShapeType.Filled);
+
+/*        shape.begin(ShapeRenderer.ShapeType.Filled);
 
 
         shape.circle(circuloPernilongo.x,circuloPernilongo.y,circuloPernilongo.radius);
         shape.rect(retanguloPersonagem.x,retanguloPersonagem.y,retanguloPersonagem.width,retanguloPersonagem.height);
         shape.setColor(Color.RED);
+        shape.circle(circuloPneu.x,circuloPneu.y,circuloPneu.radius);
         shape.end();
-
+*/
         //Se houver colisão com o pernilongo retira 300 pontos do placar
         /*if( Intersector.overlaps( circuloPernilongo, retPe )){
 //            Gdx.app.log("Colisão", "Houve colisão");

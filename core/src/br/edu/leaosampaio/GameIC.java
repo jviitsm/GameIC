@@ -66,6 +66,7 @@ public class GameIC extends Game {
     private ShapeRenderer shape;
 
     public boolean houveColisao = false;
+    public boolean houveColisaoPneu = false;
 
 
 
@@ -186,12 +187,14 @@ public class GameIC extends Game {
             if(!music.isPlaying()){
                 music.play();
             }
-    pontuacao++;
+
             if(posicaoMovimentoMosquito <- larguraDispositivo){
                 posicaoMovimentoMosquito = larguraDispositivo + 5.833f;
                 alturaMosquitos = alturaRandomica.nextInt(700) - 200;
                 distanciaMosquitos = distanciaRandomica.nextInt(500) - 300;
             }
+
+
 
 
             if (posicaoInicialVertical <= 45) {
@@ -202,7 +205,9 @@ public class GameIC extends Game {
 
 
             if(posicaoHorizontalPneu <- larguraDispositivo){
-                posicaoHorizontalPneu = larguraDispositivo + 20;
+                int distanciaPneuRandomica;
+                distanciaPneuRandomica = distanciaRandomica.nextInt(300) - distanciaRandomica.nextInt(100);
+                posicaoHorizontalPneu = larguraDispositivo + distanciaPneuRandomica;
             }
 
 
@@ -232,17 +237,26 @@ public class GameIC extends Game {
             }
 
             if(houveColisao == true){
-                Gdx.app.log("Aqui", "1" +houveColisao );
                 if(posicaoMovimentoMosquito < 15 - personagem[0].getWidth()){
                     houveColisao = false;
-                    Gdx.app.log("Aqui2", "2 " + posicaoMovimentoMosquito);
                 }
+            }
+            if(houveColisaoPneu == true ){
+
+                   int distanciaPneuRandomica;
+                   distanciaPneuRandomica = distanciaRandomica.nextInt(100) - distanciaRandomica.nextInt(30);
+                   posicaoHorizontalPneu += distanciaPneuRandomica;
+
+                   if (posicaoHorizontalPneu > larguraDispositivo) {
+                       houveColisaoPneu = false;
+                   }
+
             }
 
 
-            if (Gdx.input.justTouched()) {
+            /*if (Gdx.input.justTouched()) {
                 if (pulou != true) {
-                    if (posicaoInicialVertical < 206.25f) {
+                    if (posicaoInicialVertical < 250) {
                         velocidadeQueda = -13.75f;
                         if (posicaoInicialVertical >= 174.99f) {
                             posicaoInicialVertical = 174.99f;
@@ -253,9 +267,21 @@ public class GameIC extends Game {
                         pulou = true;
                     }
                 }
-            } else {
+
+            }*/
+
+            if(Gdx.input.justTouched()) {
+                if (pulou != true) {
+                    velocidadeQueda = -15;
+                    pulou = true;
+
+                }
+            }
+
+
+            else {
                 velocidadeQueda += 0.7;
-                if (posicaoInicialVertical > 45 || velocidadeQueda < 0) {
+                if (posicaoInicialVertical > 45 || velocidadeQueda < 0 && posicaoInicialVertical < 300)  {
                     posicaoInicialVertical = posicaoInicialVertical - velocidadeQueda;
 
                 }
@@ -284,12 +310,15 @@ public class GameIC extends Game {
                     numeroVidas = 3;
                     posicaoMovimentoMosquito = -141.67f;
                     posicaoInicialVertical = 45;
+                    posicaoHorizontalPneu += distanciaRandomica.nextInt(600) + larguraDispositivo;
                     music.play();
                     pontuacao =0;
                     houveColisao = false;
+                    houveColisaoPneu = false;
 
                       gameOverSound.stop();
             }
+
         }
     batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -297,7 +326,11 @@ public class GameIC extends Game {
 
         batch.draw(fundo,posicaoMovimentoHorizontal ,0 , larguraDispositivo,alturaDispositivo);
         batch.draw(fundo2,posicaoMovimentoHorizontal2 + larguraDispositivo ,0,larguraDispositivo,alturaDispositivo);
-        batch.draw(pneu,posicaoHorizontalPneu,30);
+
+        if(houveColisaoPneu == false) {
+                batch.draw(pneu, posicaoHorizontalPneu, 30);
+
+        }
         batch.draw(personagem[(int) variacao],50,posicaoInicialVertical);
         batch.draw(pernilongo[(int) variacao], posicaoMovimentoMosquito , 68.75f );
 
@@ -341,7 +374,7 @@ public class GameIC extends Game {
         );
         circuloPneu = new Circle(
                 posicaoHorizontalPneu + pneu.getWidth() /2,
-                50 + pneu.getHeight() /2,
+                40 + pneu.getHeight() /2,
                 pneu.getWidth()/2
 
                 );
@@ -377,7 +410,14 @@ public class GameIC extends Game {
 
             }
         }
+        if(Intersector.overlaps(circuloPneu,retanguloPersonagem)){
 
+            if(houveColisaoPneu == false){
+
+                pontuacao += 20;
+                houveColisaoPneu = true;
+            }
+        }
 	}
 
 

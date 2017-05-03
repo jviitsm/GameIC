@@ -225,8 +225,8 @@ public class GameIC extends Game {
                 posicaoMovimentoHorizontal -= deltaTime * 174.99f;
                 posicaoMovimentoHorizontal2 -= deltaTime * 174.99f;
                 posicaoHorizontalPneu -= deltaTime * 174.99f;
-                posicaoMovimentoMosquito -= deltaTime * 174.99f;
-                posicaoMovimentoMosquito2 -= deltaTime * 174.99f;
+                posicaoMovimentoMosquito -= deltaTime * 190.99f;
+                posicaoMovimentoMosquito2 -= deltaTime * 190.99f;
 
 
                 //Animação do personagem
@@ -237,8 +237,8 @@ public class GameIC extends Game {
                 posicaoMovimentoHorizontal -= deltaTime * 250;
                 posicaoMovimentoHorizontal2 -= deltaTime * 250;
                 posicaoHorizontalPneu -= deltaTime * 250;
-                posicaoMovimentoMosquito -= deltaTime * 250;
-                posicaoMovimentoMosquito2 -= deltaTime * 250;
+                posicaoMovimentoMosquito -= deltaTime * 270;
+                posicaoMovimentoMosquito2 -= deltaTime * 270;
 
 
                 //Animação do personagem
@@ -249,8 +249,8 @@ public class GameIC extends Game {
                 posicaoMovimentoHorizontal -= deltaTime * 400;
                 posicaoMovimentoHorizontal2 -= deltaTime * 400;
                 posicaoHorizontalPneu -= deltaTime * 400;
-                posicaoMovimentoMosquito -= deltaTime * 400;
-                posicaoMovimentoMosquito2 -= deltaTime * 400;
+                posicaoMovimentoMosquito -= deltaTime * 430;
+                posicaoMovimentoMosquito2 -= deltaTime * 430;
 
 
                 //Animação do personagem
@@ -261,8 +261,8 @@ public class GameIC extends Game {
                 posicaoMovimentoHorizontal -= deltaTime * 800;
                 posicaoMovimentoHorizontal2 -= deltaTime * 800;
                 posicaoHorizontalPneu -= deltaTime * 800;
-                posicaoMovimentoMosquito -= deltaTime * 800;
-                posicaoMovimentoMosquito2 -= deltaTime * 800;
+                posicaoMovimentoMosquito -= deltaTime * 830;
+                posicaoMovimentoMosquito2 -= deltaTime * 830;
 
 
                 //Animação do personagem
@@ -350,6 +350,7 @@ public class GameIC extends Game {
                     estadoJogo = 0;
                     numeroVidas = 3;
                     posicaoMovimentoMosquito = -141.67f;
+                    posicaoMovimentoMosquito2 = 400;
                     posicaoInicialVertical = 45;
                     posicaoHorizontalPneu += distanciaRandomica.nextInt(3000) + larguraDispositivo;
                     music.play();

@@ -431,7 +431,7 @@ public class GameIC extends Game {
         batch.draw(pernilongo[(int) variacao], posicaoMosquitoConstante,ALTURA_VERTICAL_MOSQUITOCONSTANTE);
         pontos.draw(batch,String.valueOf(pontuacao),pontuacaoPosicao,alturaDispositivo -20.625f);
 
-        if(aparecerVida == true && numeroVidas <3){
+        if(aparecerVida == true){
             batch.draw(vida1, posicaoVida,50);
         }
 

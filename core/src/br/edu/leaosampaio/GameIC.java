@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -30,16 +31,11 @@ public class GameIC extends Game {
 	private Texture[] personagem, pernilongo;
     private Texture vida1,vida2,vida3,gameOver,pneu;
     private BitmapFont pontos;
-    private Random distanciaRandomica,alturaRandomica,numeroRandomico;
-    private int distanciaMosquitos,alturaMosquitos,alturaMosquito2;
-    private static final float  ALTURA_MAXIMA_PULO = 300;
-    private static final float ALTURA_VERTICAL_MOSQUITOCONSTANTE = 50;
-    public float posicaoMosquitoConstante;
-    public float posicaoVida;
-    public boolean aparecerVida = false;
     public Circle circuloVida;
-
-
+    private Circle circuloMosquito2;
+    private Circle circuloPneu;
+    private Circle circuloPernilongo;
+    private Circle circuloSegundoPernilongo;
 
 
 
@@ -57,15 +53,19 @@ public class GameIC extends Game {
     private float velocidadeQueda =0;
     private float posicaoInicialVertical;
     private boolean pulou = false;
-    private Circle circuloMosquito2;
-    private Circle circuloPneu;
-    private Circle circuloPernilongo;
-    private Circle circuloSegundoPernilongo;
+
     private Rectangle retanguloPersonagem;
     private Music music,gameOverSound;
     private int pontuacao;
     private float pontuacaoPosicao;
     public boolean houveColisaoVida = false;
+    private Random distanciaRandomica,alturaRandomica,numeroRandomico;
+    private int distanciaMosquitos,alturaMosquitos,alturaMosquito2;
+    private static final float  ALTURA_MAXIMA_PULO = 300;
+    private static final float ALTURA_VERTICAL_MOSQUITOCONSTANTE = 50;
+    public float posicaoMosquitoConstante;
+    public float posicaoVida;
+    public boolean aparecerVida = false;
 
     private OrthographicCamera camera;
     private Viewport viewport;
@@ -171,8 +171,6 @@ public class GameIC extends Game {
      Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 
-
-
         //Ajustar posição da pontuação na tela
         if(pontuacao >= 0 && pontuacao < 10){
             pontuacaoPosicao = larguraDispositivo -45;
@@ -193,7 +191,6 @@ public class GameIC extends Game {
                     music.play();
                 }
             }
-
 
 
 
@@ -226,6 +223,7 @@ public class GameIC extends Game {
                 posicaoHorizontalPneu -= deltaTime * 174.99f;
                 posicaoMovimentoMosquito -= deltaTime * 174.99f;
                 posicaoMovimentoMosquito2 -= deltaTime * 174.99f;
+                posicaoMosquitoConstante -= deltaTime * 175;
                 posicaoVida -= deltaTime * 174.99f;
 
 
@@ -240,6 +238,7 @@ public class GameIC extends Game {
                 posicaoMovimentoMosquito -= deltaTime * 250;
                 posicaoMovimentoMosquito2 -= deltaTime * 250;
                 posicaoVida -= deltaTime * 250;
+                posicaoMosquitoConstante -= deltaTime *250;
 
                         //Animação do personagem
                 variacao += deltaTime * 10;
@@ -252,6 +251,7 @@ public class GameIC extends Game {
                 posicaoMovimentoMosquito -= deltaTime * 400;
                 posicaoMovimentoMosquito2 -= deltaTime * 400;
                 posicaoVida -= deltaTime *400;
+                posicaoMosquitoConstante -= deltaTime *400;
 
                         //Animação do personagem
                 variacao += deltaTime * 18;
@@ -264,6 +264,7 @@ public class GameIC extends Game {
                 posicaoMovimentoMosquito -= deltaTime * 800;
                 posicaoMovimentoMosquito2 -= deltaTime * 800;
                 posicaoVida -= deltaTime * 800;
+                posicaoMosquitoConstante -= deltaTime * 800;
 
                         //Animação do personagem
                 variacao += deltaTime * 36;
@@ -355,33 +356,37 @@ public class GameIC extends Game {
             }
             //Mosquito Constante
             if(posicaoMosquitoConstante <- larguraDispositivo){
-                posicaoMosquitoConstante = larguraDispositivo + distanciaRandomica.nextInt(3000) + 500;
+                posicaoMosquitoConstante = larguraDispositivo + distanciaRandomica.nextInt(1000) + 500;
 
             }
             //Verifica se os mosquitos estão em uma posição alta
-            if(alturaMosquitos >= ALTURA_MAXIMA_PULO) alturaMosquitos=alturaRandomica.nextInt(300);
-            if(alturaMosquito2 >= ALTURA_MAXIMA_PULO) alturaMosquito2=alturaRandomica.nextInt(300);
+            if(alturaMosquitos >= ALTURA_MAXIMA_PULO){
+                alturaMosquitos=alturaRandomica.nextInt(300);
+                if(alturaMosquito2 - alturaMosquitos < 150){
+                    if(posicaoMovimentoMosquito - posicaoMovimentoMosquito2 < 150) {
+                        alturaMosquito2 += 100;
+                        alturaMosquitos -= 100;
+                        posicaoMovimentoMosquito2 += 200;
+
+
+                    }
+                }
+            }
+            if(alturaMosquito2 >= ALTURA_MAXIMA_PULO) {
+                alturaMosquito2=alturaRandomica.nextInt(300);
+            }
+            if(posicaoMovimentoMosquito2 - posicaoMosquitoConstante < 150){
+                posicaoMosquitoConstante += 200;
+            }
+            if(posicaoMovimentoMosquito - posicaoMosquitoConstante < 150){
+                posicaoMosquitoConstante += 200;
+            }
 
             //TODO Verificar se os mosquitos estão muito proximos
-        }
-
-
-            //Vidas
-
-        if(numeroVidas <= 2) aparecerVida = true;
-
-
-
-        if(houveColisaoVida == true){
-                posicaoVida += distanciaRandomica.nextInt(1000) + larguraDispositivo;
-                aparecerVida = false;
-                houveColisaoVida = false;
-
-            }
-        if(posicaoVida <-larguraDispositivo){
-            posicaoVida = larguraDispositivo + distanciaRandomica.nextInt(2000) + 100;
 
         }
+
+
         if(houveColisaoPneu == true ){
 
             int distanciaPneuRandomica;
@@ -418,6 +423,7 @@ public class GameIC extends Game {
             }
 
         }
+
     batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
@@ -430,10 +436,6 @@ public class GameIC extends Game {
         batch.draw(pernilongo[(int) variacao], posicaoMovimentoMosquito2,  alturaMosquito2);
         batch.draw(pernilongo[(int) variacao], posicaoMosquitoConstante,ALTURA_VERTICAL_MOSQUITOCONSTANTE);
         pontos.draw(batch,String.valueOf(pontuacao),pontuacaoPosicao,alturaDispositivo -20.625f);
-
-        if(aparecerVida == true){
-            batch.draw(vida1, posicaoVida,50);
-        }
 
         if(estadoJogo ==2){
             batch.draw(gameOver,larguraDispositivo /2 - gameOver.getWidth() /2,alturaDispositivo /2 - gameOver.getHeight() /2);
@@ -450,9 +452,9 @@ public class GameIC extends Game {
         } else if(numeroVidas ==1){
             batch.draw(vida1,5,alturaDispositivo -65) ;
         } else{
+            estadoJogo =2;
         }
 
-        Gdx.app.log("VIdas", "Numero de vidas" +numeroVidas);
 
         batch.end();
 
@@ -461,7 +463,7 @@ public class GameIC extends Game {
         circuloPernilongo = new Circle(
                 posicaoMovimentoMosquito + pernilongo[0].getWidth() /2 ,
                 alturaMosquitos + pernilongo[0].getHeight() /2,
-                pernilongo[0].getWidth() /3 + 5
+                pernilongo[0].getWidth() /3 + 3
         );
         retanguloPersonagem = new Rectangle(
                 50 ,
@@ -478,19 +480,13 @@ public class GameIC extends Game {
         circuloSegundoPernilongo = new Circle(
                 posicaoMovimentoMosquito2 + pernilongo[0].getWidth() /2,
                 alturaMosquito2 + pernilongo[0].getHeight() /2,
-                pernilongo[0].getWidth() /3 + 5
+                pernilongo[0].getWidth() /3 + 3
         );
 
-        if(aparecerVida == true) {
-            circuloVida = new Circle(
-                    posicaoVida + vida1.getWidth() / 2,
-                    50 + vida1.getHeight(),
-                    vida1.getWidth() / 3 + 5
-            );
-        }
 
 
 
+        /*
 
        shape.begin(ShapeRenderer.ShapeType.Filled);
 
@@ -499,9 +495,8 @@ public class GameIC extends Game {
         shape.rect(retanguloPersonagem.x,retanguloPersonagem.y,retanguloPersonagem.width,retanguloPersonagem.height);
         shape.setColor(Color.RED);
         shape.circle(circuloPneu.x,circuloPneu.y,circuloPneu.radius);
-        shape.circle(circuloVida.x,circuloVida.y,circuloVida.radius);
         shape.end();
-
+*/
 
         if(Intersector.overlaps(circuloPernilongo,retanguloPersonagem)){
             if(houveColisao == false){
@@ -524,13 +519,7 @@ public class GameIC extends Game {
                 houveColisaoSegundoMosquito = true;
             }
         }
-	    if(Intersector.overlaps(circuloVida,retanguloPersonagem)){
-            if(houveColisaoVida == false){
-                numeroVidas = 3;
-                houveColisaoVida = true;
-                aparecerVida = false;
-            }
-        }
+
 	}
 
 
